@@ -11,8 +11,20 @@ st.set_page_config(
 )
 
 def main():
-    st.title("🎓 AI Learning Hub - Class XII")
-    st.write("Welcome to the Streamlit wrapper for the AI Learning Hub. You can view the web application below or run it directly in your browser.")
+    # Hide Streamlit's default header, footer, and padding to maximize space
+    st.markdown("""
+        <style>
+            #MainMenu {visibility: hidden;}
+            header {visibility: hidden;}
+            footer {visibility: hidden;}
+            .block-container {
+                padding-top: 1rem;
+                padding-bottom: 0rem;
+                padding-left: 0rem;
+                padding-right: 0rem;
+            }
+        </style>
+    """, unsafe_allow_html=True)
     
     # Path to the HTML file
     html_file_path = "index.html"
@@ -42,7 +54,7 @@ def main():
         main_js = get_file_content("js/main.js")
         html_content = re.sub(r'<script\s+src="js/main\.js"></script>', f'<script>{main_js}</script>', html_content)
 
-        st.components.v1.html(html_content, height=800, scrolling=True)
+        st.components.v1.html(html_content, height=1200, scrolling=True)
     else:
         st.error(f"Could not find the file: {html_file_path}. Please make sure you are running the app from the correct directory.")
 
