@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Learning Hub | Class XII</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <script>
+        window.onerror = function (msg, url, line, col, error) {
+            const errorBox = document.getElementById('error-overlay') || document.createElement('div');
+            errorBox.id = 'error-overlay';
+            errorBox.style.cssText = 'position:fixed;top:0;left:0;width:100%;background:rgba(220,38,38,0.9);color:white;padding:1rem;z-index:9999;font-family:monospace;';
+            errorBox.innerHTML += `<div>Error: ${msg} <br> <small>${url}:${line}:${col}</small></div>`;
+            document.body.prepend(errorBox);
+            return false;
+        };
+    </script>
+</head>
+
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="logo-container">
+                <div class="logo-icon">AI</div>
+                <h1>Learning Hub</h1>
+            </div>
+            <nav id="sidebar-nav" class="nav-menu">
+                <!-- Navigation items will be injected here -->
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-bar">
+                <button id="menu-toggle" class="menu-toggle" aria-label="Toggle Navigation">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 12H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                        <path d="M3 6H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                        <path d="M3 18H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                </button>
+                <div class="breadcrumbs" id="breadcrumbs">Home</div>
+            </header>
+
+            <div id="content-area" class="content-scrollable">
+                <!-- Dynamic Content will be injected here -->
+                <section class="hero-welcome">
+                    <div class="hero-content">
+                        <h2>Welcome to the Future</h2>
+                        <p>Explore the Class XII AI Curriculum through interactive visualizations and premium resources.
+                        </p>
+                        <button class="cta-button" onclick="app.navigateToUnit(0)">Start Journey</button>
+                    </div>
+                    <div class="hero-visual">
+                        <!-- Abstract AI animation placeholder -->
+                        <div class="ai-orb"></div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/data/curriculum.js"></script>
+    <script src="js/components/visualizer.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
