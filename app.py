@@ -2,59 +2,65 @@ import streamlit as st
 import streamlit.components.v1 as components
 import os
 
-# Set page config
-st.set_page_config(page_title="AI Learning Hub: Lists", layout="wide")
+# Set page configuration
+st.set_page_config(
+    page_title="AI Learning Hub | Class XII",
+    page_icon="🎓",
+    layout="wide",
+    initial_sidebar_state="collapsed"
+)
 
-def load_local_app():
-    """
-    Reads the local index.html and injects CSS/JS content inline so it can be 
-    rendered perfectly through Streamlit's HTML component without missing assets.
-    """
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    index_path = os.path.join(base_dir, "index.html")
+def main():
+    # Hide Streamlit's default header, footer, and padding to maximize space
+    st.markdown("""
+        <style>
+            #MainMenu {visibility: hidden;}
+            header {visibility: hidden;}
+            footer {visibility: hidden;}
+            .block-container {
+                padding-top: 1rem;
+                padding-bottom: 0rem;
+                padding-left: 0rem;
+                padding-right: 0rem;
+            }
+        </style>
+    """, unsafe_allow_html=True)
     
-    try:
-        with open(index_path, "r", encoding="utf-8") as f:
+    # Get the directory where app.py is located
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    
+    # Path to the HTML file
+    html_file_path = os.path.join(BASE_DIR, "index.html")
+    
+    if os.path.exists(html_file_path):
+        import re
+        with open(html_file_path, 'r', encoding='utf-8') as f:
             html_content = f.read()
-    except Exception as e:
-        return f"<h3>Error loading app: {e}</h3>"
-        
-    # Read CSS files
-    css_files = ["styles/main.css", "styles/components.css", "styles/visualizer.css"]
-    css_content = ""
-    for css_file in css_files:
-        css_path = os.path.join(base_dir, css_file)
-        if os.path.exists(css_path):
-            with open(css_path, "r", encoding="utf-8") as f:
-                css_content += f"<style>\n{f.read()}\n</style>\n"
-                
-    # Remove old stylesheet links and add our inline CSS before </head>
-    html_content = html_content.replace('<link rel="stylesheet" href="styles/main.css">', '')
-    html_content = html_content.replace('<link rel="stylesheet" href="styles/components.css">', '')
-    html_content = html_content.replace('<link rel="stylesheet" href="styles/visualizer.css">', '')
-    html_content = html_content.replace('</head>', f"{css_content}</head>")
-    
-    # Read JS file
-    js_path = os.path.join(base_dir, "js", "app.js")
-    js_content = ""
-    if os.path.exists(js_path):
-        with open(js_path, "r", encoding="utf-8") as f:
-            js_content = f"<script>\n{f.read()}\n</script>"
             
-    # Inline Questions Data directly to avoid HTTP Fetch errors in Streamlit components
-    json_path = os.path.join(base_dir, "questionbank.json")
-    if os.path.exists(json_path):
-        with open(json_path, "r", encoding="utf-8") as f:
-            json_data = f.read()
-            html_content = html_content.replace('<script src="js/app.js"></script>', f"<script>window.QUIZ_DATA = {json_data};</script>\n<script src=\"js/app.js\"></script>")
+        def get_file_content(rel_path):
+            abs_path = os.path.join(BASE_DIR, rel_path)
+            if os.path.exists(abs_path):
+                with open(abs_path, 'r', encoding='utf-8') as f:
+                    return f.read()
+            return ""
 
-    # Replace external script reference with inline script
-    html_content = html_content.replace('<script src="js/app.js"></script>', js_content)
-    
-    return html_content
+        # Inline CSS
+        css_content = get_file_content("css/style.css")
+        html_content = re.sub(r'<link\s+rel="stylesheet"\s+href="css/style\.css">', f'<style>{css_content}</style>', html_content)
+        
+        # Inline JS files
+        curr_js = get_file_content("js/data/curriculum.js")
+        html_content = re.sub(r'<script\s+src="js/data/curriculum\.js"></script>', f'<script>{curr_js}</script>', html_content)
+        
+        vis_js = get_file_content("js/components/visualizer.js")
+        html_content = re.sub(r'<script\s+src="js/components/visualizer\.js"></script>', f'<script>{vis_js}</script>', html_content)
+        
+        main_js = get_file_content("js/main.js")
+        html_content = re.sub(r'<script\s+src="js/main\.js"></script>', f'<script>{main_js}</script>', html_content)
 
-# Get the bundled HTML
-html_str = load_local_app()
+        st.components.v1.html(html_content, height=1200, scrolling=True)
+    else:
+        st.error(f"Could not find the file: {html_file_path}. Please make sure you are running the app from the correct directory.")
 
-# Render the application within the Streamlit interface
-components.html(html_str, height=900, scrolling=True)
+if __name__ == "__main__":
+    main()
